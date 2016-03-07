@@ -1,5 +1,5 @@
 // https://github.com/flitbit/diff#differences
-import differ from 'deep-diff';
+import differ from 'smf-deep-diff';
 
 const dictionary = {
   E: {
