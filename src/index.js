@@ -24,14 +24,18 @@ function style(kind) {
   return `color: ${dictionary[kind].color}; font-weight: bold`;
 }
 
+function renderObject(o) {
+  return JSON.stringify(o);
+}
+
 function render(diff) {
   const { kind, path, lhs, rhs, index, item } = diff;
 
   switch (kind) {
   case 'E':
-    return `${path.join('.')} ${lhs} → ${rhs}`;
+    return `${path.join('.')} ${renderObject(lhs)} → ${renderObject(rhs)}`;
   case 'N':
-    return `${path.join('.')} ${rhs}`;
+    return `${path.join('.')} ${renderObject(rhs)}`;
   case 'D':
     return `${path.join('.')}`;
   case 'A':
@@ -50,10 +54,11 @@ function logger({ getState }) {
 
     const diff = differ(prevState, newState);
 
+    const header = `diff @ ${time.getHours()}:${time.getMinutes()}:${time.getSeconds()}.${time.getMilliseconds()} ${action.type}`;
     try {
-      console.group('diff @', `${time.getHours()}:${time.getMinutes()}:${time.getSeconds()}`);
+      console.group(header);
     } catch (e) {
-      console.log('diff @', `${time.getHours()}:${time.getMinutes()}:${time.getSeconds()}`);
+      console.log(header);
     }
 
     if (diff) {
