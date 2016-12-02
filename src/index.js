@@ -54,7 +54,11 @@ function logger({ getState }) {
 
     const diff = differ(prevState, newState);
 
-    const header = `diff @ ${time.getHours()}:${time.getMinutes()}:${time.getSeconds()}.${time.getMilliseconds()} ${action.type}`;
+    const header = (
+      'diff @'
+      + ` ${time.getHours()}:${time.getMinutes()}:${time.getSeconds()}.${time.getMilliseconds()}` +
+      + ` ${action.type}`
+    );
     try {
       console.group(header);
     } catch (e) {
