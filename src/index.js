@@ -1,6 +1,7 @@
 // https://github.com/flitbit/diff#differences
 import differ from 'smf-deep-diff';
 
+
 const dictionary = {
   E: {
     color: '#2196F3',
@@ -20,15 +21,18 @@ const dictionary = {
   },
 };
 
+
 function style(kind) {
   return `color: ${dictionary[kind].color}; font-weight: bold`;
 }
+
 
 function renderObject(o) {
   return JSON.stringify(o);
 }
 
-function render(diff) {
+
+function renderSingleDiff(diff) {
   const { kind, path, lhs, rhs, index, item } = diff;
 
   switch (kind) {
@@ -45,6 +49,33 @@ function render(diff) {
   }
 }
 
+
+function render(header, diff) {
+  try {
+    console.group(header);
+  } catch (e) {
+    console.log(header);
+  }
+
+  if (diff) {
+    diff.forEach((elem) => {
+      const { kind } = elem;
+      const output = renderSingleDiff(elem);
+
+      console.log(`%c ${dictionary[kind].text}`, style(kind), output);
+    });
+  } else {
+    console.log('—— no diff ——');
+  }
+
+  try {
+    console.groupEnd();
+  } catch (e) {
+    console.log(`—— diff end —— `);
+  }
+}
+
+
 function logger({ getState }) {
   return (next) => (action) => {
     const prevState = getState();
@@ -53,37 +84,17 @@ function logger({ getState }) {
     const time = new Date();
 
     const diff = differ(prevState, newState);
-
     const header = (
       'diff @'
       + ` ${time.getHours()}:${time.getMinutes()}:${time.getSeconds()}.${time.getMilliseconds()}` +
       + ` ${action.type}`
     );
-    try {
-      console.group(header);
-    } catch (e) {
-      console.log(header);
-    }
-
-    if (diff) {
-      diff.forEach((elem) => {
-        const { kind } = elem;
-        const output = render(elem);
-
-        console.log(`%c ${dictionary[kind].text}`, style(kind), output);
-      });
-    } else {
-      console.log('—— no diff ——');
-    }
-
-    try {
-      console.groupEnd();
-    } catch (e) {
-      console.log(`—— diff end —— `);
-    }
+    render(header, diff);
 
     return returnValue;
   };
 }
 
+
 export default logger;
+export { render, style, dictionary };
