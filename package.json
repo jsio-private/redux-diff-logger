@@ -2,13 +2,12 @@
   "name": "redux-diff-logger",
   "version": "0.0.9",
   "description": "Diff logger between states for redux",
-  "main": "src/index.js",
+  "main": "dist/reduxDiffLogger.js",
   "scripts": {
     "test": "npm run lint",
     "clean": "$(npm bin)/rimraf lib",
     "lint": "$(npm bin)/eslint src",
-    "build:lib": "$(npm bin)/babel src --out-dir lib",
-    "build": "npm run build:lib",
+    "build": "NODE_ENV=production jsio-webpack",
     "prepublish": "npm run clean && npm run test && npm run build"
   },
   "repository": {
@@ -36,17 +35,13 @@
     "smf-deep-diff": "^0.3.4"
   },
   "devDependencies": {
-    "babel-cli": "^6.8.0",
-    "babel-core": "^6.8.0",
-    "babel-eslint": "^6.0.4",
-    "babel-loader": "^6.2.4",
-    "babel-preset-stage-0": "^6.5.0",
-    "eslint": "^2.9.0",
+    "eslint": "^3.12.2",
     "eslint-config-airbnb": "9.0.0 ",
     "eslint-plugin-import": "^1.7.0",
     "eslint-plugin-jsx-a11y": "^1.2.0",
     "eslint-plugin-react": "^5.0.1 ",
     "gh-pages": "^0.11.0",
+    "jsio-webpack": "git+https://github.com/jsio-private/jsio-webpack",
     "rimraf": "^2.4.2",
     "webpack": "^1.11.0"
   }
