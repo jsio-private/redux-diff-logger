@@ -17,7 +17,8 @@
   },
   "files": [
     "lib",
-    "src"
+    "src",
+    "jsio-webpack.config.js"
   ],
   "keywords": [
     "redux",
