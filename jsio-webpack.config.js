@@ -22,6 +22,7 @@ const configure = function (configurator, options) {
 
 
 const postConfigure = function (configurator, options) {
+  configurator.removePlugin('sourceMapSupport');
 };
 
 module.exports = {
