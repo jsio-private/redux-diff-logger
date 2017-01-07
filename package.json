@@ -8,8 +8,7 @@
     "clean": "$(npm bin)/rimraf lib",
     "lint": "$(npm bin)/eslint src",
     "build": "NODE_ENV=production jsio-webpack",
-    "prepublish": "npm run clean && npm run test && npm run build",
-    "postinstall": "npm run build"
+    "prepublish": "npm run clean && npm run test && npm run build"
   },
   "repository": {
     "type": "git",
