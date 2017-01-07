@@ -15,8 +15,8 @@
     "url": "git+https://github.com/fcomb/redux-diff-logger.git"
   },
   "files": [
-    "lib",
     "src",
+    "dist",
     "jsio-webpack.config.js"
   ],
   "keywords": [
