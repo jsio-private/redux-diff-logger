@@ -1,30 +1,33 @@
 // https://github.com/flitbit/diff#differences
 import differ from 'smf-deep-diff';
+import chalk from 'chalk';
+
+
+const STANDARD_CONSOLE = !console.group;
 
 
 const dictionary = {
   E: {
     color: '#2196F3',
     text: 'CHANGED:',
+    colorFn: chalk.blue.bold,
   },
   N: {
     color: '#4CAF50',
     text: 'ADDED:',
+    colorFn: chalk.green.bold,
   },
   D: {
     color: '#F44336',
     text: 'DELETED:',
+    colorFn: chalk.red.bold,
   },
   A: {
     color: '#2196F3',
     text: 'ARRAY:',
+    colorFn: chalk.blue.bold,
   },
 };
-
-
-function style(kind) {
-  return `color: ${dictionary[kind].color}; font-weight: bold`;
-}
 
 
 function renderObject(o) {
@@ -42,8 +45,19 @@ function renderSingleDiff(diff) {
     return `${path.join('.')} ${renderObject(rhs)}`;
   case 'D':
     return `${path.join('.')}`;
-  case 'A':
-    return [`${path.join('.')}[${index}]`, item];
+  case 'A': {
+    // Lazy instanceof check
+    const pathString = `${path.join('.')}[${index}]`;
+    if (item && item.hasOwnProperty('rhs')) {
+      const dictionaryItem = dictionary[item.kind];
+      const kindString = STANDARD_CONSOLE ? dictionaryItem.colorFn(item.kind) : item.kind;
+      if (item.hasOwnProperty('lhs')) {
+        return `${pathString} ${kindString}: ${renderObject(item.lhs)} → ${renderObject(item.rhs)}`;
+      }
+      return `${pathString} ${kindString}: ${renderObject(item.rhs)}`;
+    }
+    return `${pathString} ${item}`;
+  }
   default:
     return null;
   }
@@ -51,27 +65,41 @@ function renderSingleDiff(diff) {
 
 
 function render(header, diff) {
-  try {
-    console.group(header);
-  } catch (e) {
+  if (STANDARD_CONSOLE) {
+    console.log('—— diff start ——');
     console.log(header);
+  } else {
+    console.group(header);
   }
 
   if (diff) {
-    diff.forEach((elem) => {
-      const { kind } = elem;
+    for (let i = 0; i < diff.length; i++) {
+      const elem = diff[i];
       const output = renderSingleDiff(elem);
 
-      console.log(`%c ${dictionary[kind].text}`, style(kind), output);
-    });
+      const kind = elem.kind;
+      const dictionaryItem = dictionary[kind];
+      if (STANDARD_CONSOLE) {
+        console.log(
+          dictionaryItem.colorFn(dictionaryItem.text),
+          output
+        );
+      } else {
+        console.log(
+          `%c ${dictionaryItem.text}`,
+          `color: ${dictionary[kind].color}; font-weight: bold`,
+          output
+        );
+      }
+    }
   } else {
     console.log('—— no diff ——');
   }
 
-  try {
+  if (STANDARD_CONSOLE) {
+    console.log('—— diff end ——');
+  } else {
     console.groupEnd();
-  } catch (e) {
-    console.log(`—— diff end —— `);
   }
 }
 
@@ -97,4 +125,4 @@ function logger({ getState }) {
 
 
 export default logger;
-export { render, style, dictionary };
+export { render, dictionary };

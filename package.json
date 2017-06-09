@@ -7,6 +7,7 @@
     "test": "npm run lint",
     "clean": "$(npm bin)/rimraf lib",
     "lint": "$(npm bin)/eslint src",
+    "watch": "NODE_ENV=development jsio-webpack --watch",
     "build": "NODE_ENV=production jsio-webpack",
     "prepublish": "npm run clean && npm run test && npm run build"
   },
@@ -33,6 +34,7 @@
   },
   "homepage": "https://github.com/fcomb/redux-diff-logger#readme",
   "dependencies": {
+    "chalk": "^1.1.3",
     "smf-deep-diff": "^0.3.4"
   },
   "devDependencies": {
